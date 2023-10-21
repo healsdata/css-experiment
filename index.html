@@ -1,0 +1,253 @@
+
+<html>
+<head>
+    <style>
+:root {
+  --red: 28;
+  --green: 150;
+  --blue: 130;
+  
+  --accessible-color: calc(
+    (
+      (
+        (
+          (var(--red) * 299) +
+          (var(--green) * 587) +
+          (var(--blue) * 114)
+        ) / 1000
+      ) - 128
+    ) * -1000
+  );
+}
+
+html {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: Montserrat, sans-serif;
+}
+
+.link-div {
+    display: flex;
+    margin: auto;
+    border: 1px solid black;
+    text-align: center;
+    padding: 15px;
+    width: 300px;
+    height: 150px;   
+    text-align: center; 
+    vertical-align: middle;    
+}
+
+.button {
+  appearance: none;
+  padding: 0.5em 1em;
+  margin: auto;
+  color:
+    rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );
+  font-size: 1.5em;
+  line-height: 1;
+  font-family: inherit;
+  background-color:
+    rgb(
+      var(--red),
+      var(--green),
+      var(--blue)
+    );
+  border: 0;
+  border-radius: 1.5em;
+}
+
+.div {
+    background-color:
+    rgb(
+      var(--red),
+      var(--green),
+      var(--blue)
+    );
+}
+
+a {
+    color: rgb(
+      var(--red),
+      var(--green),
+      var(--blue)
+    );
+}
+
+a:hover {
+    filter: invert(40%);
+}
+
+.div > a {
+    color:
+    rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color)
+    );    
+}
+
+.div:hover > a,
+.div:hover > a:hover {
+    color:
+    rgb(
+      var(--accessible-color),
+      var(--accessible-color),
+      var(--accessible-color),
+      0.50
+    );    
+    filter: none;  
+}
+
+
+.div:hover,
+.button:hover {
+    background-image: 
+    linear-gradient(
+      rgba(
+        calc(var(--accessible-color)),
+        calc(var(--accessible-color)),
+        calc(var(--accessible-color)),
+        0.20
+      ),
+      rgba(
+        calc(var(--accessible-color)),
+        calc(var(--accessible-color)),
+        calc(var(--accessible-color)),
+        0.20
+      )
+    );
+}
+
+
+/* Controls */
+
+.controls {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 1rem;
+  color: #333;
+  text-transform: uppercase;
+  background-color: rgba(220,220,220,0.5);
+}
+
+.controls .title {
+  flex: 2 0 100%;
+  margin: 0.5rem;
+  font-weight: 900;
+  font-size: 1.25em;
+  text-align: center;
+  letter-spacing: 0.03125em;
+}
+
+.controls fieldset {
+  width: calc(33.333% - 1rem);
+  border: none;
+  margin: 0.5rem;
+}
+
+.controls label {
+  display: block;
+  font-size: x-small;
+  letter-spacing: 0.0625em;
+}
+
+.controls input[type="range"] {
+  position: relative;
+  width: 100%;
+}
+
+.controls input[type="range"]::before {
+  content: attr(data-value);
+  position: absolute;
+  bottom: 100%;
+  right: 0;
+}        
+    </style>
+</head>
+
+
+</html>
+
+
+<div>
+
+    <div class="div link-div"><br><Br><br>
+        <a href="#">Link on Background</a>
+    </div>
+    <div class="link-div"><br><Br><br>
+        <a href="#">Link on Nothing</a>
+    </div>
+</div>
+<button class="button">Button w/ Hover</button>
+
+
+<div class="controls">
+  <h2 class="title">Background Color</h2>
+  
+  <fieldset>
+    <div class="form-element">
+      <label for="red">Red</label>
+      <input id="red" class="range red" name="red" type="range" min="0" max="255">
+    </div>
+  </fieldset>
+  
+  <fieldset>
+    <div class="form-element">
+      <label for="green">Green</label>
+      <input id="green" class="range green" name="green" type="range" min="0" max="255">
+    </div>
+  </fieldset>
+  
+  <fieldset>
+    <div class="form-element">
+      <label for="blue">Blue</label>
+      <input id="blue" class="range blue" name="blue" type="range" min="0" max="255">
+    </div>
+  </fieldset>
+</div>
+
+<script>
+
+var styles = getComputedStyle(document.body);
+var root = document.documentElement;
+var range = document.querySelectorAll('.range');
+
+function setDataVal(element) {
+  element.setAttribute('data-value', element.value);
+}
+
+for (var i = 0; i < range.length; i++) {
+  var rangeItem = range[i];
+  var initialRangeValue = parseInt(styles.getPropertyValue('--' + rangeItem.name));
+  
+  rangeItem.value = initialRangeValue;
+  setDataVal(rangeItem);
+  
+  rangeItem.addEventListener('input', function() {
+    root.style.setProperty('--' + this.name, this.value);
+    setDataVal(this);
+  });
+}
+
+
+</script>
